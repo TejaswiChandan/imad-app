@@ -20,7 +20,7 @@ button.onclick = function () {
        // Not done yet
     };
        // Make the request
-       request.open('GET' , 'http://tejaswichandan92.imad.hasura-app.io/counter', true );
+       request.open('GET' , 'https://tejaswichandan92.imad.hasura-app.io/counter', true );
        request.send(null);
      
      };
