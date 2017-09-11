@@ -5,116 +5,121 @@ var path = require('path');
 var app = express();
 app.use(morgan('combined'));
 
+
+var articles = {
+    'article-one': {
+    title: 'Article One | Tejaswi Chandan',
+    heading: 'Article One',
+    date: 'Sept 8, 2017',
+    content:` 
+                    <p>
+                        This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article.
+                    </p>
+                    
+                    <p>
+                        This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article.
+                    </p>
+                    
+                    <p>
+                        This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article...This is the Content for my First Article.
+                    </p> `
+    },
+    'article-two': {
+        title: 'Article Two | Tejaswi Chandan',
+        heading: 'Article Two',
+        date: 'Sept 9, 2017',
+        content:` 
+                    <p>
+                        This is the Content for my Second Article.
+                    </p> `
+    },
+    'article-three': {
+        title: 'Article Three | Tejaswi Chandan',
+        heading: 'Article Three',
+        date: 'Sept 10, 2017',
+        content:` 
+                    <p>
+                        This is the Content for my Third Article.
+                    </p> `
+    }
+};
+function createTemplate (data) {
+    var title = data.title;
+    var date = data.date;
+    var heading = data.heading;
+    var content = data.content;
+        var htmlTemplate = `
+            <html>
+            <head>
+                <title>
+                       ${title}  
+                </title>
+                     <meta name="viewport" content="width=device-width, initial-scale=1">
+                     <link href="/ui/style.css" rel="stylesheet" />
+            </head>
+            <body>
+                <div class="container">
+                    
+                        <div> 
+                        <a href="/"> Home </a>
+                        </div>
+                        <hr/>
+                        <h3>
+                            ${heading}
+                        </h3>
+                        <div>
+                            ${date}
+                        </div>
+                        <div>
+                            ${content}
+                        </div>
+                </div>
+            </body>
+        </html>
+        `;
+        return htmlTemplate;
+}
+  
+
+
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
+     
+     var counter = 0;
+    app.get('/counter', function (req, res) {
+        counter = counter + 1;
+        res.send(counter.toString());
+    });
 
-app.get('/ui/main.js', function (req, res) {
-  res.sendFile(path.join(__dirname, 'ui', 'main.js'));
-});
-
-app.get('/ui/temp.js', function (req, res) {
-  res.sendFile(path.join(__dirname, 'ui', 'temp.js'));
-});
-
-var articles = {
-	'article-one': {
-		title:'Article One Page',
-		heading:'Article One',
-		date: '05, Aug 2017',
-		content: `<p>First article content goes here. First article content goes here. First article content goes here. First article content goes here. First article content goes here. First article content goes here. </p>`
-	},
-	'article-two'	: {
-		title:'Article TWO Page',
-		heading:'Article TWO',
-		date: '15, Aug 2017',
-		content: '<p>Second article content goes here. </p>'
-	},
-	'article-three': {
-		title:'Article Three Page',
-		heading:'Article Three',
-		date: '25, Aug 2017',
-		content: '<p>Third article content goes here. </p>'
-	}
-};
-
-function createTemplate(data) {	
-	var title = data.title;
-	var date = data.date;
-	var heading = data.heading;
-	var content = data.content;
-	var htmlTemplate=`<!doctype html>
-		<html>
-		<head>
-			<title>${title}</title>			
-			<meta name="viewport" content="width=device-width, initial-scale=1">
-			<link rel="stylesheet" type="text/css" href="/ui/style.css"/>
-		</head>
-		<body>
-		  <script type="text/javascript" src="../ui/temp.js"></script>
-		<div>
-			<a href="/">home</a>
-		</div>
-		<hr>
-		<h1>${heading}</h1>
-		<div>
-			${date}
-		</div>
-		<div class='container'>
-			${content}
-
-			Comment <input type="text" id="comment" placeholder="enter comment"></input>
-			<input type="submit" id="btnComment"></input>
-		</div> 
-			<div class="center"><ul id="commentList">  
-			<li>abcd</li>
-			<li>xyz</li>
-			</ul></div>
-		</body>
-		</html>`;
-
-		return htmlTemplate;
-}
-
-var counter=0;
-app.get('/counter', function(req, res) {
-	counter++;
-	res.send(counter.toString());
-});
-
-var names = [];
-//app.get('/submitName/:name', function (req, res) {
-app.get('/submitName', function (req, res) {
-	//var name=req.params.name;
-	var name=req.query.name;
-	names.push(name);
-	res.send(JSON.stringify(names));
-});
-
-var comments = [];
-//app.get('/submitName/:name', function (req, res) {
-app.get('/submitComment', function (req, res) {
-	//var name=req.params.name;
-	var comment=req.query.comment;
-	comments.push(comment);
-	res.send(JSON.stringify(comments));
-});
-
-app.get('/:articleName', function (req, res) {
-  //res.send('article one requested will be served shortly');
-  //res.sendFile(path.join(__dirname, 'ui', 'article-one.html'));
-  var articleName=req.params.articleName;
-  res.send(createTemplate(articles[articleName]));
+    app.get('/:articleName', function (req, res) {
+        // articleName == article-one
+        // articles[articleName] == {} content object for article one
+        var articleName = req.params.articleName;
+    res.send(createTemplate(articles[articleName]));
 });
 
 app.get('/ui/style.css', function (req, res) {
-  res.sendFile(path.join(__dirname, 'ui', 'style.css'));
+  res.sendFile(path.join(__dirname, 'ui', 'style.css'));   
+});
+    
+app.get('/ui/main.js', function (req, res) {
+  res.sendFile(path.join(__dirname, 'ui', 'main.js'));
 });
 
 app.get('/ui/madi.png', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'madi.png'));
 });
 
+var names = [];
+app.get('/submit.name/:name', function (req,res) {
+    //Get the name from the request object
+    var name = req.params.name; 
+    
+    names.push(name);
+    //JSON ; Javascript Object Notation
+    res.send(JSON.stringify(names)); 
+});
 // Do not change port, otherwise your app won't run on IMAD servers
 // Use 8080 only for local development if you already have apache running on 80
 
