@@ -1,7 +1,7 @@
 //Counter code
-var button = document.getElementById('counter');
+var button1 = document.getElementById('counter');
 
-button.onclick = function () {
+document.getElementById("button").onclick=function() {
     
     // Create a request object
     var request = new XMLHttpRequest();
